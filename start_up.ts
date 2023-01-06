@@ -1,10 +1,10 @@
 import * as express from 'express';
 import * as BodyParser from 'body-parser';
 import * as cors from 'cors';
-import NewsController from './controllers/news_controller';
+import * as compression from 'compression';
+
 import mongoose from 'mongoose';
-import Auth from './infra/auth';
-import Uploads from './infra/uploads';
+import news_router from './router/news_router';
 class StartUp {
   public app: express.Application;
 
@@ -31,31 +31,11 @@ class StartUp {
     this.enable_cors();
     this.app.use(BodyParser.json());
     this.app.use(BodyParser.urlencoded({ extended: false }));
+    this.app.use(compression());
   }
 
   routes(){
-    this.app.route('/').get((req, res) => {
-      return res.status(200).json({ ok: true });
-    });
-
-    this.app.route('/uploads').post(Uploads.single('file'), (req, res) =>  {
-      try {
-        res.status(200).json({
-          message: 'arquivo enviado com sucesso!'
-        });
-      } catch (error) {
-        console.log(error);
-        
-      }
-    })
-
-    //this.app.use(Auth.validate);
-    this.app.route('/api/v1/news').get(NewsController.get);
-    this.app.route('/api/v1/news/:id').get(NewsController.get_by_id);
-    this.app.route('/api/v1/news').post(NewsController.create);
-    this.app.route('/api/v1/news/:id').put(NewsController.update);
-    this.app.route('/api/v1/news/:id').delete(NewsController.delete);
-
+    this.app.use(news_router);
   }
 }
 
