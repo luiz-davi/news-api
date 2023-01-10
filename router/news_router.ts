@@ -29,5 +29,6 @@ router.route('/api/v1/news/export/tocsv').get(NewsController.export_to_csv);
 router.route('/api/v1/news').post(NewsController.create);
 router.route('/api/v1/news/:id').put(NewsController.update);
 router.route('/api/v1/news/:id').delete(NewsController.delete);
+router.route('/api/v1/news/search/:search').get(NewsController.search);
 
 export default router;
