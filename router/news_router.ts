@@ -28,5 +28,6 @@ router.route('/api/v1/news/:id').get(NewsController.get_by_id);
 router.route('/api/v1/news').post(NewsController.create);
 router.route('/api/v1/news/:id').put(NewsController.update);
 router.route('/api/v1/news/:id').delete(NewsController.delete);
+router.route('/api/v1/news/search/:search').get(NewsController.search);
 
 export default router;

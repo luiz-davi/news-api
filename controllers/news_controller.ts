@@ -8,15 +8,15 @@ import { textChangeRangeNewSpan } from 'typescript';
 class NewsController{
 
   async get(req, res){
-    let client = redis.createClient();
-
-    client.on('connect', function() {
+    let client = redis.createClient({
+      url: "redis://localhost:6379"
     });
+
+    client.on('connect', function(){});
 
     await client.connect();
 
-    let news = await client.get("news")
-                           .catch((err) => res.status(500).send(err))
+    let news = await client.get("news").catch((err) => res.status(500).send(err))
     
     if(news){
       console.log('redis');
@@ -28,6 +28,15 @@ class NewsController{
       console.log('db');
       Helper.send_response(res, HttpStatus.OK, news);
     }
+  }
+
+  async search(req, res){
+    const search = req.params.search;
+    const page = req.query.page ? parseInt(req.query.page) :  1;
+    const perPage = req.query.perPage ? parseInt(req.query.perPage) : 10;
+    
+    const news = await NewsService.search(search, page, perPage);
+    Helper.send_response(res, HttpStatus.OK, news);
   }
 
   async get_by_id(req, res){
