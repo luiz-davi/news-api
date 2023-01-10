@@ -16,11 +16,7 @@ class NewService{
     let end_date = new Date('2019-03-01');
 
     return await NewsRepository.find({
-      active: true,
-      publish_date: {
-        $gt: start_date,
-        $lt: end_date
-      }
+      active: true
     }, 'title hat publish_date img')
     .sort({ publish_date: -1 });
   }

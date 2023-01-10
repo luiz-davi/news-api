@@ -2,9 +2,12 @@ import * as express from 'express';
 import * as BodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as compression from 'compression';
+import { graphqlHTTP } from 'express-graphql';
 
 import mongoose from 'mongoose';
 import news_router from './router/news_router';
+import schemas from './graphql/schemas';
+import resolvers from './graphql/resolvers'
 class StartUp {
   public app: express.Application;
 
@@ -37,6 +40,12 @@ class StartUp {
 
   routes(){
     this.app.use(news_router);
+
+    this.app.use('/graphql', graphqlHTTP({
+      schema: schemas,
+      rootValue: resolvers,
+      graphiql: true
+    }))
   }
 }
 
