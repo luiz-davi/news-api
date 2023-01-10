@@ -4,6 +4,7 @@ import * as redis from 'redis';
 import NewsService from "../services/news_service";
 import Helper from "../infra/helper";
 import { textChangeRangeNewSpan } from 'typescript';
+import Exporter from '../services/exporters/export_files';
 
 class NewsController{
 
@@ -27,6 +28,17 @@ class NewsController{
       client.expire('news', 2);
       console.log('db');
       Helper.send_response(res, HttpStatus.OK, news);
+    }
+  }
+
+  async export_to_csv(req, res){
+    try {
+      let response = await NewsService.get();
+      let filename = Exporter.tocsv(response);
+
+      Helper.send_response(res, HttpStatus.OK, `${req.get('host')}/exporters/${filename}`);
+    } catch (error) {
+      console.log(error);
     }
   }
 

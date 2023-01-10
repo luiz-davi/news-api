@@ -32,6 +32,7 @@ class StartUp {
     this.app.use(BodyParser.json());
     this.app.use(BodyParser.urlencoded({ extended: false }));
     this.app.use(compression());
+    this.app.use('/exports', express.static(process.cwd() + 'exports'));
   }
 
   routes(){
